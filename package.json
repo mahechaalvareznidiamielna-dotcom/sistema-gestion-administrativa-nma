@@ -9,9 +9,10 @@
     "build": "npm run build:server && npm run build:client",
     "start": "node dist/main",
     "start:prod": "node dist/main",
-    "start:dev": "nest start --watch",
-    "dev:client": "vite client --port 5173",
-    "dev": "concurrently \"npm run start:dev\" \"npm run dev:client\""
+    "start:api": "nest start --watch",
+    "start:client": "vite client --port 5173",
+    "start:dev": "concurrently --kill-others-on-fail -n API,WEB -c cyan,magenta \"npm run start:api\" \"npm run start:client\"",
+    "dev": "npm run start:dev"
   },
   "dependencies": {
     "@nestjs/common": "^10.4.15",
