@@ -1,0 +1,83 @@
+[
+  {
+    "nombre": "Enviar informe mensual",
+    "descripcion": "Consolidar ventas y gastos del mes",
+    "fecha": "2026-09-14",
+    "fechaLimite": "2026-09-15",
+    "prioridad": "alta",
+    "estado": "pendiente",
+    "id": 1
+  },
+  {
+    "nombre": "Reunión con proveedor",
+    "descripcion": "Revisar pedido de útiles escolares",
+    "fecha": "2026-09-14",
+    "fechaLimite": "2026-09-16",
+    "prioridad": "media",
+    "estado": "pendiente",
+    "id": 2
+  },
+  {
+    "nombre": "Revisar pagos pendientes",
+    "descripcion": "Verificar recibos de servicios",
+    "fecha": "2026-09-14",
+    "fechaLimite": "2026-09-17",
+    "prioridad": "media",
+    "estado": "pendiente",
+    "id": 3
+  },
+  {
+    "nombre": "Actualizar inventario",
+    "descripcion": "Contar existencias y ajustar cantidades",
+    "fecha": "2026-09-14",
+    "fechaLimite": "2026-09-18",
+    "prioridad": "baja",
+    "estado": "completada",
+    "id": 4
+  },
+  {
+    "nombre": "Capacitación del personal",
+    "descripcion": "Uso del sistema de gestión administrativa",
+    "fecha": "2026-09-14",
+    "fechaLimite": "2026-09-20",
+    "prioridad": "media",
+    "estado": "pendiente",
+    "id": 5
+  },
+  {
+    "nombre": "Revisar stock de cartulinas y foami",
+    "descripcion": "Verificar existencias para temporada escolar",
+    "fecha": "2026-09-14",
+    "fechaLimite": "2026-09-21",
+    "prioridad": "alta",
+    "estado": "pendiente",
+    "id": 6
+  },
+  {
+    "nombre": "Actualizar lista de precios de papelería",
+    "descripcion": "Ajustar márgenes según nuevos costos de insumos",
+    "fecha": "2026-09-14",
+    "fechaLimite": "2026-09-22",
+    "prioridad": "media",
+    "estado": "pendiente",
+    "id": 7
+  },
+  {
+    "nombre": "Organizar estantes de belleza y hogar",
+    "descripcion": "Optimizar espacio disponible en vitrinas B y C",
+    "fecha": "2026-09-14",
+    "fechaLimite": "2026-09-23",
+    "prioridad": "baja",
+    "estado": "pendiente",
+    "id": 8
+  },
+  {
+    "nombre": "Contactar transportadora de pedidos",
+    "descripcion": "Cotizar envíos a domicilio para clientes frecuentes",
+    "fecha": "2026-09-14",
+    "fechaLimite": "2026-09-24",
+    "prioridad": "alta",
+    "estado": "pendiente",
+    "id": 9
+  }
+]

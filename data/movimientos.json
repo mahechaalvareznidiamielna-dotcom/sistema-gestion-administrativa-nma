@@ -1,0 +1,86 @@
+[
+  {
+    "tipo": "ingreso",
+    "fecha": "2026-09-14",
+    "descripcion": "Venta de productos",
+    "valor": 1500000,
+    "observacion": "Venta en mostrador",
+    "formaPago": "efectivo",
+    "cantidad": 2,
+    "productoId": 1,
+    "categoriaGastoId": null,
+    "id": 1
+  },
+  {
+    "tipo": "gasto",
+    "fecha": "2026-09-14",
+    "descripcion": "Pago de servicios",
+    "valor": 350000,
+    "observacion": "Energía y agua",
+    "categoriaGastoId": 2,
+    "formaPago": null,
+    "cantidad": null,
+    "productoId": null,
+    "id": 2
+  },
+  {
+    "tipo": "gasto",
+    "fecha": "2026-09-13",
+    "descripcion": "Compra de papelería",
+    "valor": 120000,
+    "observacion": "Resmas de papel y cartulinas",
+    "categoriaGastoId": 1,
+    "formaPago": null,
+    "cantidad": null,
+    "productoId": null,
+    "id": 3
+  },
+  {
+    "tipo": "ingreso",
+    "fecha": "2026-09-12",
+    "descripcion": "Cobro a cliente",
+    "valor": 750000,
+    "observacion": "Factura 104",
+    "formaPago": "transferencia",
+    "cantidad": null,
+    "categoriaGastoId": null,
+    "productoId": null,
+    "id": 4
+  },
+  {
+    "tipo": "gasto",
+    "fecha": "2026-09-11",
+    "descripcion": "Transporte",
+    "valor": 80000,
+    "observacion": "Acarreo de insumos",
+    "categoriaGastoId": 3,
+    "formaPago": null,
+    "cantidad": null,
+    "productoId": null,
+    "id": 5
+  },
+  {
+    "tipo": "gasto",
+    "fecha": "2026-09-10",
+    "descripcion": "Arriendo del local",
+    "valor": 2320000,
+    "observacion": "Canon mensual local papelería",
+    "categoriaGastoId": 4,
+    "formaPago": null,
+    "cantidad": null,
+    "productoId": null,
+    "id": 6
+  },
+  {
+    "tipo": "ingreso",
+    "fecha": "2026-09-08",
+    "descripcion": "Venta corporativa útiles de oficina",
+    "valor": 3000000,
+    "observacion": "Pedido institucional SENA / colegios",
+    "formaPago": "transferencia",
+    "cantidad": null,
+    "categoriaGastoId": null,
+    "productoId": null,
+    "id": 7
+  }
+]

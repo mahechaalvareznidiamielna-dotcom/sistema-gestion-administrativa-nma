@@ -1,0 +1,26 @@
+[
+  {
+    "nombre": "Compra de mercancía",
+    "id": 1
+  },
+  {
+    "nombre": "Servicios",
+    "id": 2
+  },
+  {
+    "nombre": "Transporte",
+    "id": 3
+  },
+  {
+    "nombre": "Arriendo",
+    "id": 4
+  },
+  {
+    "nombre": "Mantenimiento",
+    "id": 5
+  },
+  {
+    "nombre": "Otros",
+    "id": 6
+  }
+]

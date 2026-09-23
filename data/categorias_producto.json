@@ -1,0 +1,30 @@
+[
+  {
+    "nombre": "Útiles escolares",
+    "id": 1
+  },
+  {
+    "nombre": "Maquillaje y productos de belleza",
+    "id": 2
+  },
+  {
+    "nombre": "Artículos para la cocina",
+    "id": 3
+  },
+  {
+    "nombre": "Artículos para el hogar",
+    "id": 4
+  },
+  {
+    "nombre": "Productos de papelería y oficina",
+    "id": 5
+  },
+  {
+    "nombre": "Juguetes",
+    "id": 6
+  },
+  {
+    "nombre": "Otros",
+    "id": 7
+  }
+]

@@ -1,0 +1,7 @@
+id,nombre,categoriaId,cantidadDisponible,precioCompra,precioVenta,ubicacion,observaciones
+1,Cuaderno universitario,1,24,3200,4500,Estante A1,"Rayado, 100 hojas"
+2,Kit de lapiceros,5,18,2800,4000,Estante A2,"Negro, azul y rojo"
+3,Labial mate,2,10,5500,8000,Vitrina B,Colores surtidos
+4,Juego de cubiertos de cocina,3,12,8500,13000,Estante C1,Acero inoxidable
+5,Organizador para el hogar,4,8,12000,18500,Estante C2,Plástico reforzado multiusos
+6,Coche de carreras de juguete,6,15,4500,7500,Estante D,

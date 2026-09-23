@@ -1,0 +1,62 @@
+[
+  {
+    "nombre": "Cuaderno universitario",
+    "categoriaId": 1,
+    "cantidadDisponible": 24,
+    "precioCompra": 3200,
+    "precioVenta": 4500,
+    "ubicacion": "Estante A1",
+    "observaciones": "Rayado, 100 hojas",
+    "id": 1
+  },
+  {
+    "nombre": "Kit de lapiceros",
+    "categoriaId": 5,
+    "cantidadDisponible": 18,
+    "precioCompra": 2800,
+    "precioVenta": 4000,
+    "ubicacion": "Estante A2",
+    "observaciones": "Negro, azul y rojo",
+    "id": 2
+  },
+  {
+    "nombre": "Labial mate",
+    "categoriaId": 2,
+    "cantidadDisponible": 10,
+    "precioCompra": 5500,
+    "precioVenta": 8000,
+    "ubicacion": "Vitrina B",
+    "observaciones": "Colores surtidos",
+    "id": 3
+  },
+  {
+    "nombre": "Juego de cubiertos de cocina",
+    "categoriaId": 3,
+    "cantidadDisponible": 12,
+    "precioCompra": 8500,
+    "precioVenta": 13000,
+    "ubicacion": "Estante C1",
+    "observaciones": "Acero inoxidable",
+    "id": 4
+  },
+  {
+    "nombre": "Organizador para el hogar",
+    "categoriaId": 4,
+    "cantidadDisponible": 8,
+    "precioCompra": 12000,
+    "precioVenta": 18500,
+    "ubicacion": "Estante C2",
+    "observaciones": "Plástico reforzado multiusos",
+    "id": 5
+  },
+  {
+    "nombre": "Coche de carreras de juguete",
+    "categoriaId": 6,
+    "cantidadDisponible": 15,
+    "precioCompra": 4500,
+    "precioVenta": 7500,
+    "ubicacion": "Estante D",
+    "observaciones": "",
+    "id": 6
+  }
+]

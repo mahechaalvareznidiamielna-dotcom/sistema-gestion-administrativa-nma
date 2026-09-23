@@ -1,0 +1,8 @@
+id,tipo,fecha,descripcion,valor,observacion,formaPago,cantidad,categoriaGastoId,productoId
+1,ingreso,2026-09-14,Venta de productos,1500000,Venta en mostrador,efectivo,2,,1
+2,gasto,2026-09-14,Pago de servicios,350000,Energía y agua,,,2,
+3,gasto,2026-09-13,Compra de papelería,120000,Resmas de papel y cartulinas,,,1,
+4,ingreso,2026-09-12,Cobro a cliente,750000,Factura 104,transferencia,,,
+5,gasto,2026-09-11,Transporte,80000,Acarreo de insumos,,,3,
+6,gasto,2026-09-10,Arriendo del local,2320000,Canon mensual local papelería,,,4,
+7,ingreso,2026-09-08,Venta corporativa útiles de oficina,3000000,Pedido institucional SENA / colegios,transferencia,,,
