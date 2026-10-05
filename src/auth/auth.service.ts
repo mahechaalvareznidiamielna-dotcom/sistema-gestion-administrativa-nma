@@ -1,60 +1,58 @@
 import {
   Injectable,
   UnauthorizedException,
-  ConflictException,
-  NotFoundException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcryptjs';
-import { UsuariosService } from '../usuarios/usuarios.service';
 import { LoginDto } from './dto/login.dto';
 import { ActualizarPerfilDto } from './dto/actualizar-perfil.dto';
 
+// ─────────────────────────────────────────────────────────────
+// MODO SIMULADO: Auth sin base de datos real
+// Credenciales fijas: admin@papeleria.com / Admin123
+// ─────────────────────────────────────────────────────────────
+
+const ADMIN_SIMULADO = {
+  id: 1,
+  nombre: 'Nidia Milena Mahecha',
+  email: 'admin@papeleria.com',
+  password: 'Admin123',
+};
+
 @Injectable()
 export class AuthService {
-  constructor(
-    private readonly usuarios: UsuariosService,
-    private readonly jwt: JwtService,
-  ) {}
+  constructor(private readonly jwt: JwtService) {}
 
   async login(dto: LoginDto) {
-    const usuario = await this.usuarios.findByEmail(dto.email.toLowerCase());
-    if (!usuario) {
+    const emailOk = dto.email.toLowerCase() === ADMIN_SIMULADO.email;
+    const passOk = dto.password === ADMIN_SIMULADO.password;
+    if (!emailOk || !passOk) {
       throw new UnauthorizedException('Correo o contraseña incorrectos');
     }
-    const ok = await bcrypt.compare(dto.password, usuario.password);
-    if (!ok) {
-      throw new UnauthorizedException('Correo o contraseña incorrectos');
-    }
-    return this.emitirToken(usuario.id, usuario.email, usuario.nombre);
+    return this.emitirToken(
+      ADMIN_SIMULADO.id,
+      ADMIN_SIMULADO.email,
+      ADMIN_SIMULADO.nombre,
+    );
   }
 
-  async perfil(id: number) {
-    const usuario = await this.usuarios.findById(id);
-    if (!usuario) throw new NotFoundException('Usuario no encontrado');
-    return { id: usuario.id, nombre: usuario.nombre, email: usuario.email };
+  async perfil(_id: number) {
+    return {
+      id: ADMIN_SIMULADO.id,
+      nombre: ADMIN_SIMULADO.nombre,
+      email: ADMIN_SIMULADO.email,
+    };
   }
 
-  async actualizarPerfil(id: number, dto: ActualizarPerfilDto) {
-    const usuario = await this.usuarios.findById(id);
-    if (!usuario) throw new NotFoundException('Usuario no encontrado');
-
-    const email = dto.email.toLowerCase();
-    const otro = await this.usuarios.findByEmail(email);
-    if (otro && otro.id !== id) {
-      throw new ConflictException('El correo ya está en uso');
-    }
-
-    usuario.nombre = dto.nombre;
-    usuario.email = email;
+  async actualizarPerfil(_id: number, dto: ActualizarPerfilDto) {
+    // En modo simulado solo actualizamos en memoria temporalmente
+    const nombre = dto.nombre ?? ADMIN_SIMULADO.nombre;
+    const email = dto.email?.toLowerCase() ?? ADMIN_SIMULADO.email;
+    ADMIN_SIMULADO.nombre = nombre;
+    ADMIN_SIMULADO.email = email;
     if (dto.password) {
-      usuario.password = await bcrypt.hash(dto.password, 10);
+      ADMIN_SIMULADO.password = dto.password;
     }
-    const guardado = await this.usuarios.save(usuario);
-    if (!guardado) {
-      throw new NotFoundException('No se pudo guardar la información del usuario');
-    }
-    return this.emitirToken(guardado.id, guardado.email, guardado.nombre);
+    return this.emitirToken(ADMIN_SIMULADO.id, email, nombre);
   }
 
   private emitirToken(id: number, email: string, nombre: string) {

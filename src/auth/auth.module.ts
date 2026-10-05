@@ -5,11 +5,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from './jwt.strategy';
-import { UsuariosModule } from '../usuarios/usuarios.module';
 
 @Module({
   imports: [
-    UsuariosModule,
     PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
