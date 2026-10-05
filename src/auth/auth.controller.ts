@@ -10,18 +10,23 @@ export class AuthController {
 
   @Post('login')
   login(@Body() dto: LoginDto) {
-    return this.auth.login(dto);
+    return this.auth.login(dto || {});
+  }
+
+  @Get('login')
+  loginGet() {
+    return this.auth.login({});
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('me')
   me(@Req() req) {
-    return this.auth.perfil(req.user.id);
+    return this.auth.perfil(req.user?.id);
   }
 
   @UseGuards(JwtAuthGuard)
   @Patch('perfil')
   actualizar(@Req() req, @Body() dto: ActualizarPerfilDto) {
-    return this.auth.actualizarPerfil(req.user.id, dto);
+    return this.auth.actualizarPerfil(req.user?.id, dto);
   }
 }

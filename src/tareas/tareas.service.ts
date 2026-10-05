@@ -1,82 +1,79 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Like, Repository } from 'typeorm';
-import { Tarea } from './tarea.entity';
+import { MemStoreService, MemTarea } from '../mem-store/mem-store.service';
 import { CrearTareaDto } from './dto/crear-tarea.dto';
 import { CalculosService } from '../calculos/calculos.service';
 
 @Injectable()
 export class TareasService {
   constructor(
-    @InjectRepository(Tarea)
-    private readonly repo: Repository<Tarea>,
+    private readonly store: MemStoreService,
     private readonly calculos: CalculosService,
   ) {}
 
-  async listar(params: {
-    q?: string;
-    estado?: string;
-    page?: number;
-    limit?: number;
-  }) {
-    const page = Math.max(1, params.page || 1);
+  async listar(params: { q?: string; estado?: string; page?: number; limit?: number }) {
+    const page  = Math.max(1, params.page  || 1);
     const limit = Math.min(50, Math.max(1, params.limit || 8));
-    const where: any = {};
+    let lista = [...this.store.tareas];
     if (params.estado === 'pendiente' || params.estado === 'completada') {
-      where.estado = params.estado;
+      lista = lista.filter(t => t.estado === params.estado);
     }
     if (params.q?.trim()) {
-      where.nombre = Like(`%${params.q.trim()}%`);
+      const q = params.q.trim().toLowerCase();
+      lista = lista.filter(t => t.nombre.toLowerCase().includes(q));
     }
-    const [items, total] = await this.repo.findAndCount({
-      where,
-      order: { fechaLimite: 'ASC', id: 'DESC' },
-      skip: (page - 1) * limit,
-      take: limit,
-    });
+    lista.sort((a, b) => a.fechaLimite.localeCompare(b.fechaLimite) || b.id - a.id);
+    const total = lista.length;
+    const items = lista.slice((page - 1) * limit, page * limit);
     return { items, total, page, limit, pages: Math.ceil(total / limit) || 1 };
   }
 
   pendientesRecientes(limite = 5) {
-    return this.repo.find({
-      where: { estado: 'pendiente' },
-      order: { fechaLimite: 'ASC' },
-      take: limite,
-    });
+    return [...this.store.tareas]
+      .filter(t => t.estado === 'pendiente')
+      .sort((a, b) => a.fechaLimite.localeCompare(b.fechaLimite))
+      .slice(0, limite);
   }
 
   contarPendientes() {
-    return this.repo.count({ where: { estado: 'pendiente' } });
+    return Promise.resolve(this.store.tareas.filter(t => t.estado === 'pendiente').length);
   }
 
   async metricas() {
-    const tareas = await this.repo.find();
-    return this.calculos.calcularMetricasTareas(tareas);
+    return this.calculos.calcularMetricasTareas(this.store.tareas as any);
   }
 
   async obtener(id: number) {
-    const tarea = await this.repo.findOne({ where: { id } });
-    if (!tarea) throw new NotFoundException('Tarea no encontrada');
-    return tarea;
+    const t = this.store.tareas.find(x => x.id === id);
+    if (!t) throw new NotFoundException('Tarea no encontrada');
+    return t;
   }
 
   crear(dto: CrearTareaDto) {
-    return this.repo.save(
-      this.repo.create({
-        ...dto,
-        estado: dto.estado || 'pendiente',
-      }),
-    );
+    const nueva: MemTarea = {
+      id: this.store.nextTareaId(),
+      nombre: dto.nombre,
+      descripcion: dto.descripcion ?? '',
+      fecha: dto.fecha,
+      fechaLimite: dto.fechaLimite,
+      prioridad: dto.prioridad ?? 'media',
+      estado: dto.estado ?? 'pendiente',
+    };
+    this.store.tareas.push(nueva);
+    return Promise.resolve(nueva);
   }
 
   async actualizar(id: number, dto: CrearTareaDto) {
-    await this.obtener(id);
-    await this.repo.update(id, { ...dto, estado: dto.estado || 'pendiente' });
-    return this.obtener(id);
+    const idx = this.store.tareas.findIndex(x => x.id === id);
+    if (idx < 0) throw new NotFoundException('Tarea no encontrada');
+    this.store.tareas[idx] = { ...this.store.tareas[idx], ...dto, estado: dto.estado ?? 'pendiente' };
+    return this.store.tareas[idx];
   }
 
   async eliminar(id: number) {
-    const res = await this.repo.delete(id);
-    if (!res.affected) throw new NotFoundException('Tarea no encontrada');
+    const idx = this.store.tareas.findIndex(x => x.id === id);
+    if (idx < 0) throw new NotFoundException('Tarea no encontrada');
+    this.store.tareas.splice(idx, 1);
   }
 }
+
+

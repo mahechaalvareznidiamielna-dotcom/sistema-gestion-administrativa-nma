@@ -1,37 +1,28 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Between, LessThan, Repository } from 'typeorm';
-import { Movimiento } from '../movimientos/movimiento.entity';
+import { MemStoreService } from '../mem-store/mem-store.service';
 import { TareasService } from '../tareas/tareas.service';
 import { CalculosService } from '../calculos/calculos.service';
 
 @Injectable()
 export class ReportesService {
   constructor(
-    @InjectRepository(Movimiento)
-    private readonly movimientos: Repository<Movimiento>,
+    private readonly store: MemStoreService,
     private readonly tareas: TareasService,
     private readonly calculos: CalculosService,
   ) {}
 
   async resumen(desde?: string, hasta?: string) {
     const { inicio, fin } = this.rango(desde, hasta);
-    const items = await this.movimientos.find({
-      where: { fecha: Between(inicio, fin) },
-      order: { fecha: 'ASC' },
-      relations: ['categoriaGasto'],
-    });
-    const anteriores = await this.movimientos.find({
-      where: { fecha: LessThan(inicio) },
-    });
+    let items = [...this.store.movimientos];
+    const anteriores = items.filter(m => m.fecha < inicio);
+    items = items.filter(m => m.fecha >= inicio && m.fecha <= fin);
+    items.sort((a, b) => a.fecha.localeCompare(b.fecha));
 
+    const resueltos = items.map(m => this.store.resolveMovimiento(m));
     const { totalIngresos, totalGastos, saldo, margenUtilidad } =
-      this.calculos.calcularTotales(items);
-    const saldoInicial = this.calculos.calcularSaldoPrevio(anteriores);
-    const gastosPorCategoria = this.calculos.calcularGastosPorCategoria(
-      items,
-      totalGastos,
-    );
+      this.calculos.calcularTotales(resueltos as any);
+    const saldoInicial = this.calculos.calcularSaldoPrevio(anteriores as any);
+    const gastosPorCategoria = this.calculos.calcularGastosPorCategoria(resueltos as any, totalGastos);
 
     return {
       desde: inicio,
@@ -42,10 +33,7 @@ export class ReportesService {
       saldoInicial,
       saldoFinal: saldoInicial + saldo,
       margenUtilidad,
-      ingresosVsGastos: {
-        ingresos: totalIngresos,
-        gastos: totalGastos,
-      },
+      ingresosVsGastos: { ingresos: totalIngresos, gastos: totalGastos },
       gastosPorCategoria,
     };
   }
@@ -54,29 +42,21 @@ export class ReportesService {
     const hoy = new Date();
     const inicioMes = `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, '0')}-01`;
     const finMes = this.ultimoDiaMes(hoy);
-    const [resumen, tareasPendientes, totalPendientes, ultimosMovimientos] =
-      await Promise.all([
-        this.resumen(inicioMes, finMes),
-        this.tareas.pendientesRecientes(5),
-        this.tareas.contarPendientes(),
-        this.movimientos.find({
-          order: { fecha: 'DESC', id: 'DESC' },
-          take: 5,
-        }),
-      ]);
-    return {
-      ...resumen,
-      tareasPendientes,
-      totalPendientes,
-      ultimosMovimientos,
-    };
+    const [resumen, tareasPendientes, totalPendientes] = await Promise.all([
+      this.resumen(inicioMes, finMes),
+      this.tareas.pendientesRecientes(5),
+      this.tareas.contarPendientes(),
+    ]);
+    const ultimosMovimientos = [...this.store.movimientos]
+      .sort((a, b) => b.fecha.localeCompare(a.fecha) || b.id - a.id)
+      .slice(0, 5)
+      .map(m => this.store.resolveMovimiento(m));
+    return { ...resumen, tareasPendientes, totalPendientes, ultimosMovimientos };
   }
 
   private rango(desde?: string, hasta?: string) {
     const hoy = new Date();
-    const inicio =
-      desde ||
-      `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, '0')}-01`;
+    const inicio = desde || `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, '0')}-01`;
     const fin = hasta || this.ultimoDiaMes(hoy);
     return { inicio, fin };
   }

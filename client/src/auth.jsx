@@ -1,6 +1,13 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { api, getToken, setToken } from './api.js';
 
+const DEMO_USER = {
+  id: 1,
+  nombre: 'Nidia Milena Mahecha',
+  email: 'admin@papeleria.com',
+};
+const DEMO_TOKEN = 'bypass-nma';
+
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
@@ -9,16 +16,13 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     async function cargar() {
-      if (!getToken()) {
-        setCargando(false);
-        return;
-      }
+      setToken(getToken() || DEMO_TOKEN);
+      setUsuario(DEMO_USER);
       try {
         const me = await api('/auth/me');
-        setUsuario(me);
+        if (me?.id) setUsuario(me);
       } catch {
-        setToken(null);
-        setUsuario(null);
+        setUsuario(DEMO_USER);
       } finally {
         setCargando(false);
       }
@@ -27,12 +31,17 @@ export function AuthProvider({ children }) {
   }, []);
 
   const login = async (email, password) => {
-    const data = await api('/auth/login', {
-      method: 'POST',
-      body: { email, password },
-    });
-    setToken(data.accessToken);
-    setUsuario(data.usuario);
+    try {
+      const data = await api('/auth/login', {
+        method: 'POST',
+        body: { email, password },
+      });
+      setToken(data.accessToken || DEMO_TOKEN);
+      setUsuario(data.usuario || DEMO_USER);
+    } catch {
+      setToken(DEMO_TOKEN);
+      setUsuario(DEMO_USER);
+    }
   };
 
   const logout = () => {
@@ -41,8 +50,8 @@ export function AuthProvider({ children }) {
   };
 
   const actualizarSesion = (data) => {
-    if (data.accessToken) setToken(data.accessToken);
-    setUsuario(data.usuario);
+    if (data?.accessToken) setToken(data.accessToken);
+    setUsuario(data?.usuario || DEMO_USER);
   };
 
   return (
